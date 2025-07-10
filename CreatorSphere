@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Creator Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="app.js"></script>
+</body>
+</html>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff4f4;
+  color: #333;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  margin: 0 0.25rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #ffbfd6;
+  color: #333;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ffc4de;
+}
+
+section {
+  padding: 2rem;
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+}
+document.getElementById("app").innerHTML = `
+  <nav>
+    <div>
+      <button onclick="navigate('studio')">🎥 Studio</button>
+      <button onclick="navigate('notes')">📓 Notas</button>
+      <button onclick="navigate('quotes')">💡 Frases</button>
+      <button onclick="navigate('planner')">🗓️ Planner</button>
+      <button onclick="navigate('vibe')">🧃 Vibe</button>
+    </div>
+  </nav>
+  <main id="mainContent"></main>
+`;
+
+function navigate(section) {
+  const main = document.getElementById("mainContent");
+  if (section === "studio") {
+    main.innerHTML = `
+      <h2>🎥 Media Studio</h2>
+      <input type="file" multiple accept="image/*,video/*" onchange="handleMedia(event)" />
+      <div id="mediaGallery" style="margin-top: 1rem;"></div>
+    `;
+  } else if (section === "notes") {
+    main.innerHTML = `
+      <h2>📓 Notas</h2>
+      <textarea id="notes">${localStorage.getItem("notes") || ""}</textarea>
+      <button onclick="saveNotes()">💾 Guardar</button>
+    `;
+  } else if (section === "quotes") {
+    main.innerHTML = `
+      <h2>💡 Frases motivadoras</h2>
+      <ul>
+        <li>"Cree en ti y todo será posible."</li>
+        <li>"Hazlo con pasión o no lo hagas."</li>
+        <li>"Tu contenido tiene valor, no lo subestimes."</li>
+        <li>"Brilla con luz propia."</li>
+      </ul>
+    `;
+  } else if (section === "planner") {
+    main.innerHTML = "<h2>🗓️ Planner</h2><p>Próximamente...</p>";
+  } else if (section === "vibe") {
+    main.innerHTML = "<h2>🧃 Vibe Maker</h2><p>En construcción.</p>";
+  }
+}
+
+function handleMedia(event) {
+  const gallery = document.getElementById("mediaGallery");
+  Array.from(event.target.files).forEach(file => {
+    const url = URL.createObjectURL(file);
+    const element = file.type.startsWith("video")
+      ? `<video controls src="${url}" style="width:100%; max-height:200px; margin-top:10px;"></video>`
+      : `<img src="${url}" style="width:100%; max-height:200px; margin-top:10px;" />`;
+    gallery.innerHTML += element;
+  });
+}
+
+function saveNotes() {
+  const notes = document.getElementById("notes").value;
+  localStorage.setItem("notes", notes);
+  alert("Notas guardadas ✨");
+}
+
+navigate("studio"); // inicia en la sección Studio
